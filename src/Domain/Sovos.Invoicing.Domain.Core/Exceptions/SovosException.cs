@@ -6,4 +6,6 @@ public class SovosException : Exception
         : base(message)
     {
     }
+
+    public string? Code { get; set; }
 }

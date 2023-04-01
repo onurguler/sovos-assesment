@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
+using Sovos.Invoicing.Application;
+using Sovos.Invoicing.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +11,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddApplication();
+builder.Services.AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 
@@ -21,5 +29,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateAsyncScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<InvoicingDbContext>();
+await dbContext.Database.MigrateAsync();
 
 app.Run();

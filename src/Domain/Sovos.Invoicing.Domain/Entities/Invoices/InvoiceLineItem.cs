@@ -9,7 +9,7 @@ public sealed class InvoiceLineItem
     {
     }
 
-    private InvoiceLineItem(InvoiceLineItemId id, Name name, decimal quantity, string unitCode, decimal unitPrice)
+    private InvoiceLineItem(InvoiceLineItemId id, Name name, decimal quantity, UnitCode unitCode, decimal unitPrice)
     {
         Id = id;
         Name = name;
@@ -19,12 +19,13 @@ public sealed class InvoiceLineItem
     }
 
     public InvoiceLineItemId Id { get; private set; } = null!;
+    public InvoiceId InvoiceId { get; private set; } = null!;
     public Name Name { get; private set; } = null!;
     public decimal Quantity { get; private set; }
-    public string UnitCode { get; private set; } = null!;
+    public UnitCode UnitCode { get; private set; } = null!;
     public decimal UnitPrice { get; private set; }
 
-    public static InvoiceLineItem Create(InvoiceLineItemId id, Name name, decimal quantity, string unitCode, decimal unitPrice)
+    public static InvoiceLineItem Create(InvoiceLineItemId id, Name name, decimal quantity, UnitCode unitCode, decimal unitPrice)
     {
         return new InvoiceLineItem(id, name, quantity, unitCode, unitPrice);
     }

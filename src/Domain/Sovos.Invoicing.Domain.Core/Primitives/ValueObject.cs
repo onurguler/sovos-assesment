@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace Sovos.Invoicing.Domain.Core.Primitives;
 
 /// <summary>

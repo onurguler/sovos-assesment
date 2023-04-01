@@ -6,6 +6,8 @@ public sealed class Name : ValueObject
 {
     public const int MaxLength = 100;
 
+    private Name() {}
+    
     public Name(string name)
     {
         ArgumentException.ThrowIfNullOrEmpty(name, nameof(name));
