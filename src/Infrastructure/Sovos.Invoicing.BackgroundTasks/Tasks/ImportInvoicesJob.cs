@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+using Microsoft.Extensions.Logging;
+
 using Sovos.Invoicing.Application.Contracts.Invoices;
 using Sovos.Invoicing.Application.Core.Data;
 using Sovos.Invoicing.BackgroundTasks.Absractions.Tasks;
@@ -12,17 +14,20 @@ namespace Sovos.Invoicing.BackgroundTasks.Tasks;
 
 public class ImportInvoicesJob : IBackgroundTask
 {
+    private readonly ILogger<ImportInvoicesJob> _logger;
     private readonly IDbContext _dbContext;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IInvoiceQueueRepository _invoiceQueueRepository;
     private readonly IInvoiceRepository _invoiceRepository;
 
     public ImportInvoicesJob(
+        ILogger<ImportInvoicesJob> logger,
         IDbContext dbContext,
         IUnitOfWork unitOfWork,
         IInvoiceQueueRepository invoiceQueueRepository,
         IInvoiceRepository invoiceRepository)
     {
+        _logger = logger;
         _dbContext = dbContext;
         _unitOfWork = unitOfWork;
         _invoiceQueueRepository = invoiceQueueRepository;
@@ -32,6 +37,10 @@ public class ImportInvoicesJob : IBackgroundTask
     public async Task HandleAsync()
     {
         var pendingInvoices = await _invoiceQueueRepository.GetPendingAsync();
+
+        _logger.LogInformation($"Starting {nameof(ImportInvoicesJob)} job with ${pendingInvoices.Count} pending invoices...");
+        
+        int successCount = 0;
 
         foreach (InvoiceQueue pendingInvoice in pendingInvoices)
         {
@@ -74,6 +83,8 @@ public class ImportInvoicesJob : IBackgroundTask
                     _dbContext.Set<Invoice>().Entry(invoice).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
                     throw;
                 }
+
+                successCount++;
             }
             catch (Exception ex)
             {
@@ -81,5 +92,7 @@ public class ImportInvoicesJob : IBackgroundTask
                 await _unitOfWork.SaveChangesAsync();
             }
         }
+
+        _logger.LogInformation($"End {nameof(ImportInvoicesJob)} job. Succeded: {successCount}, Failed: {pendingInvoices.Count - successCount}");
     }
 }
