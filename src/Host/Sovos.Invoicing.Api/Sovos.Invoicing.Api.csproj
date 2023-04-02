@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\Infrastructure\Sovos.Invoicing.Persistence\Sovos.Invoicing.Persistence.csproj" />
     <ProjectReference Include="..\..\Application\Sovos.Invoicing.Application\Sovos.Invoicing.Application.csproj" />
     <ProjectReference Include="..\..\Application\Sovos.Invoicing.Application.Contracts\Sovos.Invoicing.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Sovos.Invoicing.BackgroundTasks\Sovos.Invoicing.BackgroundTasks.csproj" />
   </ItemGroup>
 
 </Project>

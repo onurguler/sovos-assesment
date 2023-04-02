@@ -12,7 +12,7 @@ using Sovos.Invoicing.Persistence;
 namespace Sovos.Invoicing.Persistence.Migrations
 {
     [DbContext(typeof(InvoicingDbContext))]
-    [Migration("20230401173633_Initial")]
+    [Migration("20230402151951_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace Sovos.Invoicing.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
                     b.Property<string>("InvoiceId")
                         .IsRequired()

@@ -47,9 +47,6 @@ public sealed class Invoice
 
     public void AddLineItem(InvoiceLineItem lineItem)
     {
-        if (_lineItems.Any(x => x.Id == lineItem.Id))
-            throw new InvoiceLineItemAlreadyExistsException(lineItem.Id);
-
         _lineItems.Add(lineItem);
     }
 

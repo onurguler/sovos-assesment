@@ -18,6 +18,7 @@ public sealed class InvoiceLineItemConfiguration : IEntityTypeConfiguration<Invo
         builder.Property(invoiceLineItem => invoiceLineItem.Id)
             .HasConversion(invoiceLineItemId => invoiceLineItemId.Value, invoiceLineItemId => new InvoiceLineItemId(invoiceLineItemId))
             .ValueGeneratedOnAdd()
+            .UseIdentityAlwaysColumn()
             .IsRequired();
 
         builder.Property(invoiceLineItem => invoiceLineItem.InvoiceId)

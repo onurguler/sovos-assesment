@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sovos.Invoicing.Persistence", "src\Infrastructure\Sovos.Invoicing.Persistence\Sovos.Invoicing.Persistence.csproj", "{CDAA0ABC-ADEC-473F-91A3-52C5975CBA5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sovos.Invoicing.BackgroundTasks", "src\Infrastructure\Sovos.Invoicing.BackgroundTasks\Sovos.Invoicing.BackgroundTasks.csproj", "{06DDE9FD-95F6-4D97-86AE-414C7A83360B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{CDAA0ABC-ADEC-473F-91A3-52C5975CBA5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDAA0ABC-ADEC-473F-91A3-52C5975CBA5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDAA0ABC-ADEC-473F-91A3-52C5975CBA5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06DDE9FD-95F6-4D97-86AE-414C7A83360B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06DDE9FD-95F6-4D97-86AE-414C7A83360B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06DDE9FD-95F6-4D97-86AE-414C7A83360B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06DDE9FD-95F6-4D97-86AE-414C7A83360B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DC201ECA-26DD-4010-A4C2-548185BE680E} = {C6F4C75A-F1E6-4F1C-B2A7-C3026F3478A2}
@@ -63,5 +69,6 @@ Global
 		{CC486B1B-E264-4C51-A108-4DA34F53C9DA} = {819629C1-F160-4A2A-B45F-0185C5930F77}
 		{32C4C359-8387-4A99-97DC-82564F6A532E} = {C6F4C75A-F1E6-4F1C-B2A7-C3026F3478A2}
 		{CDAA0ABC-ADEC-473F-91A3-52C5975CBA5B} = {32C4C359-8387-4A99-97DC-82564F6A532E}
+		{06DDE9FD-95F6-4D97-86AE-414C7A83360B} = {32C4C359-8387-4A99-97DC-82564F6A532E}
 	EndGlobalSection
 EndGlobal

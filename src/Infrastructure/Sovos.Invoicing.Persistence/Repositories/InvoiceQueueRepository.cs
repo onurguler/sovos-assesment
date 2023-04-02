@@ -17,7 +17,7 @@ public sealed class InvoiceQueueRepository : IInvoiceQueueRepository
     public async Task<IList<InvoiceQueue>> GetPendingAsync(int limit = 10, CancellationToken cancellationToken = default)
     {
         var query = _dbContext.Set<InvoiceQueue>()
-            .Where(x => !x.Completed)
+            .Where(x => !x.Completed && x.RetryCount < 3)
             .OrderBy(x => x.CreatedAtUtc);
 
         return await query.Take(limit).ToListAsync(cancellationToken);

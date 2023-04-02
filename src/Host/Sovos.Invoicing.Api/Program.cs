@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using Sovos.Invoicing.Application;
+using Sovos.Invoicing.BackgroundTasks;
 using Sovos.Invoicing.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddBackgroundTasks(builder.Configuration);
 
 var app = builder.Build();
 
@@ -33,5 +35,7 @@ app.MapControllers();
 using var scope = app.Services.CreateAsyncScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<InvoicingDbContext>();
 await dbContext.Database.MigrateAsync();
+
+app.UseBackgroundTasks();
 
 app.Run();

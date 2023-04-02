@@ -9,9 +9,8 @@ public sealed class InvoiceLineItem
     {
     }
 
-    private InvoiceLineItem(InvoiceLineItemId id, Name name, decimal quantity, UnitCode unitCode, decimal unitPrice)
+    private InvoiceLineItem(Name name, decimal quantity, UnitCode unitCode, decimal unitPrice)
     {
-        Id = id;
         Name = name;
         Quantity = quantity;
         UnitCode = unitCode;
@@ -25,8 +24,8 @@ public sealed class InvoiceLineItem
     public UnitCode UnitCode { get; private set; } = null!;
     public decimal UnitPrice { get; private set; }
 
-    public static InvoiceLineItem Create(InvoiceLineItemId id, Name name, decimal quantity, UnitCode unitCode, decimal unitPrice)
+    public static InvoiceLineItem Create(Name name, decimal quantity, UnitCode unitCode, decimal unitPrice)
     {
-        return new InvoiceLineItem(id, name, quantity, unitCode, unitPrice);
+        return new InvoiceLineItem(name, quantity, unitCode, unitPrice);
     }
 }
