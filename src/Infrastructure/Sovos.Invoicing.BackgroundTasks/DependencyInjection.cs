@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 
 using Microsoft.AspNetCore.Builder;
@@ -21,9 +22,17 @@ public static class DependencyInjection
 
     public static IApplicationBuilder UseBackgroundTasks(this IApplicationBuilder app)
     {
-        app.UseHangfireDashboard();
+        app.UseHangfireDashboard("/hangfire", new DashboardOptions()
+        {
+            Authorization = new[] { new MyAuthorizationFilter() }
+        });
 
-        RecurringJob.AddOrUpdate<ImportInvoicesJob>(nameof(ImportInvoicesJob), job => job.HandleAsync(), "*/15 * * * *", TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time"));
+        RecurringJob.AddOrUpdate<ImportInvoicesJob>(nameof(ImportInvoicesJob), job => job.HandleAsync(), "*/15 * * * *");
         return app;
     }
+}
+
+public class MyAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context) => true;
 }
