@@ -19,7 +19,7 @@ public sealed class Name : ValueObject
         Value = name;
     }
 
-    public string Value { get; } = null!;
+    public string Value { get; private set; } = null!;
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

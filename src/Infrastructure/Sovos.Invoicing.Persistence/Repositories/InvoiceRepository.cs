@@ -26,8 +26,9 @@ public sealed class InvoiceRepository : IInvoiceRepository
     public async Task<Invoice?> GetByIdAsync(InvoiceId id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Set<Invoice>()
-            .Include(invoice => invoice.LineItems)
-            .SingleOrDefaultAsync(invoice => invoice.InvoiceId == id, cancellationToken);
+            .AsNoTracking()
+            .Where(invoice => invoice.InvoiceId == id)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public void Insert(Invoice invoice)

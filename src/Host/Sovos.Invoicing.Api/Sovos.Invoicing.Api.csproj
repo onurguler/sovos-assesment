@@ -12,6 +12,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -19,6 +20,7 @@
     <ProjectReference Include="..\..\Infrastructure\Sovos.Invoicing.Persistence\Sovos.Invoicing.Persistence.csproj" />
     <ProjectReference Include="..\..\Application\Sovos.Invoicing.Application\Sovos.Invoicing.Application.csproj" />
     <ProjectReference Include="..\..\Application\Sovos.Invoicing.Application.Contracts\Sovos.Invoicing.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Sovos.Invoicing.Infrastructure\Sovos.Invoicing.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Sovos.Invoicing.BackgroundTasks\Sovos.Invoicing.BackgroundTasks.csproj" />
   </ItemGroup>
 

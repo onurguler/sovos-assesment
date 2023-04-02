@@ -32,8 +32,8 @@ public sealed class InvoicesController : ControllerBase
     public async Task<ActionResult<List<InvoiceHeaderResponse>>> ListDocuments()
         => Ok(await _mediator.Send(new GetDocumentListQuery()));
 
-    [HttpGet("{InvoiceId}")]
-    public async Task<ActionResult<InvoiceResponse>> GetDocument([Bind("InvoiceId")] string invoiceId)
+    [HttpGet("{invoiceId}")]
+    public async Task<ActionResult<InvoiceResponse>> GetDocument(string invoiceId)
     {
         var query = new GetDocumentByIdQuery(invoiceId);
         var result = await _mediator.Send(query);

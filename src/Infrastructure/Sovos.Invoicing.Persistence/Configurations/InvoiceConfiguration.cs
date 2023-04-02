@@ -18,6 +18,7 @@ public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(invoice => invoice.InvoiceId)
             .HasConversion(invoiceId => invoiceId.Value, invoiceId => new InvoiceId(invoiceId))
             .HasMaxLength(InvoiceId.MaxLength)
+            .ValueGeneratedNever()
             .IsRequired();
 
         builder.OwnsOne(invoice => invoice.SenderTitle, senderTitleBuilder =>
@@ -41,5 +42,7 @@ public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         });
 
         builder.Property(invoice => invoice.Date).IsRequired();
+
+        builder.HasIndex(invoice => invoice.InvoiceId).IsUnique(true);
     }
 }

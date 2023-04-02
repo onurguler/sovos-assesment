@@ -1,5 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+
 using Sovos.Invoicing.Application.Contracts.Invoices;
 using Sovos.Invoicing.Application.Core.Abstractions.Messaging;
+using Sovos.Invoicing.Application.Core.Data;
+using Sovos.Invoicing.Domain.Entities.Invoices;
 using Sovos.Invoicing.Domain.Exceptions.Invoices;
 using Sovos.Invoicing.Domain.Primitives.Invoices;
 using Sovos.Invoicing.Domain.Repositories.Invoices;
@@ -8,10 +12,12 @@ namespace Sovos.Invoicing.Application.Invoices.Queries.GetDocumentById;
 
 public class GetDocumentByIdQueryHandler : IQueryHandler<GetDocumentByIdQuery, InvoiceResponse>
 {
+    private readonly IDbContext _dbContext;
     private readonly IInvoiceRepository _invoiceRepository;
 
-    public GetDocumentByIdQueryHandler(IInvoiceRepository invoiceRepository)
+    public GetDocumentByIdQueryHandler(IDbContext dbContext, IInvoiceRepository invoiceRepository)
     {
+        _dbContext = dbContext;
         _invoiceRepository = invoiceRepository;
     }
 
@@ -23,6 +29,11 @@ public class GetDocumentByIdQueryHandler : IQueryHandler<GetDocumentByIdQuery, I
         if (invoice == null)
             throw new InvoiceNotFoundException(invoiceId);
 
+        var liteItems = await _dbContext.Set<InvoiceLineItem>()
+            .Where(w => w.InvoiceId == invoiceId)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
         var response = new InvoiceResponse(
             new InvoiceHeaderResponse(
                 invoice.InvoiceId.Value,
@@ -30,7 +41,7 @@ public class GetDocumentByIdQueryHandler : IQueryHandler<GetDocumentByIdQuery, I
                 invoice.ReceiverTitle.Value,
                 invoice.Date
             ),
-            invoice.LineItems.Select(
+            liteItems.Select(
                 s => new InvoiceLineItemResponse(
                     s.Id.Value,
                     s.Name.Value,

@@ -5,8 +5,8 @@ namespace Sovos.Invoicing.Domain.Exceptions.Invoices;
 
 public class InvoiceNotFoundException : NotFoundException
 {
-    public InvoiceNotFoundException(InvoiceId message) 
-        : base($"Invoice does not exist with id '{message.Value}'")
+    public InvoiceNotFoundException(InvoiceId invoiceId) 
+        : base($"Invoice does not exist with id '{invoiceId.Value}'")
     {
         Code = "Invoices.InvoiceNotFound";
     }

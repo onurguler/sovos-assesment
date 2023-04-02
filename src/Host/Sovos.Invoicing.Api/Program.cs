@@ -1,41 +1,66 @@
 using Microsoft.EntityFrameworkCore;
 
+using Serilog;
+
 using Sovos.Invoicing.Application;
 using Sovos.Invoicing.BackgroundTasks;
+using Sovos.Invoicing.Infrastructure;
+using Sovos.Invoicing.Infrastructure.Logging;
 using Sovos.Invoicing.Persistence;
 
-var builder = WebApplication.CreateBuilder(args);
+StaticLogger.EnsureInitialized();
+Log.Information("Server booting up 🚀");
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddApplication();
-builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddBackgroundTasks(builder.Configuration);
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Add services to the container.
+    builder.Host.UseSerilog((_, config) => config
+        .WriteTo.Console()
+        .ReadFrom.Configuration(builder.Configuration));
+
+    builder.Services.AddControllers();
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddApplication();
+    builder.Services.AddPersistence(builder.Configuration);
+    builder.Services.AddInfrastructure();
+    builder.Services.AddBackgroundTasks(builder.Configuration);
+
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseInfrastructure();
+
+    app.MapControllers();
+
+    using var scope = app.Services.CreateAsyncScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<InvoicingDbContext>();
+    await dbContext.Database.MigrateAsync();
+
+    app.UseBackgroundTasks();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-using var scope = app.Services.CreateAsyncScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<InvoicingDbContext>();
-await dbContext.Database.MigrateAsync();
-
-app.UseBackgroundTasks();
-
-app.Run();
+catch (Exception ex) when (!ex.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))
+{
+    StaticLogger.EnsureInitialized();
+    Log.Fatal(ex, "Unhandled exception 💥");
+}
+finally
+{
+    StaticLogger.EnsureInitialized();
+    Log.Information("Server Shutting down... 👇");
+    Log.CloseAndFlush();
+}
