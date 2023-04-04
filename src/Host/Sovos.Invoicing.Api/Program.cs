@@ -27,7 +27,7 @@ try
 
     builder.Services.AddApplication();
     builder.Services.AddPersistence(builder.Configuration);
-    builder.Services.AddInfrastructure();
+    builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddBackgroundTasks(builder.Configuration);
 
     var app = builder.Build();

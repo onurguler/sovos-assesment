@@ -1,8 +1,12 @@
 using System.Text.Json;
 
+using Hangfire;
+
 using Microsoft.Extensions.Logging;
 
+using Sovos.Invoicing.Application.Contracts.Emails;
 using Sovos.Invoicing.Application.Contracts.Invoices;
+using Sovos.Invoicing.Application.Core.Abstractions.Notifications;
 using Sovos.Invoicing.Application.Core.Data;
 using Sovos.Invoicing.BackgroundTasks.Absractions.Tasks;
 using Sovos.Invoicing.Domain.Entities.Invoices;
@@ -19,19 +23,22 @@ public class ImportInvoicesJob : IBackgroundTask
     private readonly IUnitOfWork _unitOfWork;
     private readonly IInvoiceQueueRepository _invoiceQueueRepository;
     private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IEmailNotificationService _emailNotificationService;
 
     public ImportInvoicesJob(
         ILogger<ImportInvoicesJob> logger,
         IDbContext dbContext,
         IUnitOfWork unitOfWork,
         IInvoiceQueueRepository invoiceQueueRepository,
-        IInvoiceRepository invoiceRepository)
+        IInvoiceRepository invoiceRepository,
+        IEmailNotificationService emailNotificationService)
     {
         _logger = logger;
         _dbContext = dbContext;
         _unitOfWork = unitOfWork;
         _invoiceQueueRepository = invoiceQueueRepository;
         _invoiceRepository = invoiceRepository;
+        _emailNotificationService = emailNotificationService;
     }
 
     public async Task HandleAsync()
@@ -85,6 +92,12 @@ public class ImportInvoicesJob : IBackgroundTask
                 }
 
                 successCount++;
+
+                BackgroundJob.Enqueue(() 
+                    => _emailNotificationService.SendInvoiceImportedEmail(
+                        new InvoiceImportedEmail(invoice.InvoiceId.Value, invoice.Date)
+                    )
+                );
             }
             catch (Exception ex)
             {
